@@ -1,9 +1,12 @@
 package com.techstore.productos.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,5 +44,22 @@ public class ProductoController {
 		Producto productoNuevo = productoService.guardarProducto(producto);
 		return new ResponseEntity<Producto>(productoNuevo, HttpStatus.CREATED);
 	}
+	
+	@GetMapping
+	@Operation(summary = "Lista todos los productos", description = "Obtiene una lista de todos los productos")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Lista obtenida con exito"),
+			@ApiResponse(responseCode = "500", description = "Error al obtener la lista")
+	})
+	public ResponseEntity<List<Producto>> listarProductos(){
+		List<Producto> nuevaLista = productoService.listarProductos();
+		return new ResponseEntity<>(nuevaLista, HttpStatus.OK);
+	}
+	
+	
+	
+	
+	
+	
 	
 }
