@@ -91,7 +91,21 @@ public class ProductoController {
 		}
 	}
 	
-	
+	@DeleteMapping("/{id}")
+	@Operation(summary = "Eliminar producto", description = "Elimina el producto por su id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "204", description = "Producto eliminado con exito"),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado")
+	})
+	public ResponseEntity<Void> eliminarProducto(@PathVariable @Parameter(description = "Id del producto") String id){
+		Producto productoExistente = productoService.buscarProductoPorId(id);
+		if(productoExistente != null) {
+			productoService.eliminarProducto(id);
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	
 	
