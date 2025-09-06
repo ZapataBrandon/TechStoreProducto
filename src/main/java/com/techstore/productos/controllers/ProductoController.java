@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,7 @@ public class ProductoController {
 	public ResponseEntity<Producto> crearProducto(@RequestBody @Parameter(description = "Datos necesarios para crear un producto")
 	Producto producto){
 		Producto productoNuevo = productoService.guardarProducto(producto);
-		return new ResponseEntity<Producto>(productoNuevo, HttpStatus.CREATED);
+		return new ResponseEntity<>(productoNuevo, HttpStatus.CREATED);
 	}
 	
 	@GetMapping
@@ -55,6 +56,22 @@ public class ProductoController {
 		List<Producto> nuevaLista = productoService.listarProductos();
 		return new ResponseEntity<>(nuevaLista, HttpStatus.OK);
 	}
+	
+	@GetMapping("/{id}")
+	@Operation(summary = "Busqueda en especifico", description = "Busca un producto por su id")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Busqueda con exito"),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado con ese id")
+	})
+	public ResponseEntity<Producto> buscarPorId(@PathVariable @Parameter(description = "Id del producto") String id){
+		Producto producto = productoService.buscarProductoPorId(id);
+		if(producto != null) {
+			return new ResponseEntity<>(producto, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	
 	
