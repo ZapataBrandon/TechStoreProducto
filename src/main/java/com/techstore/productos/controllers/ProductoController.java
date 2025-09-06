@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,6 +73,24 @@ public class ProductoController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@PutMapping("/{id}")
+	@Operation(summary = "Actualizacion Producto", description = "Actualiza completamente el producto")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "Producto actualizado completamente"),
+			@ApiResponse(responseCode = "404", description = "Producto no encontrado") 
+	})
+	public ResponseEntity<Producto> actualizarProducto(@PathVariable @Parameter(description = "Id del producto")String id, 
+			@RequestBody @Parameter(description = "datos a actualizar") Producto producto){
+		Producto productoViejo = productoService.buscarProductoPorId(id);
+		if(productoViejo != null) {
+			Producto productoActualizado = productoService.actualizarProducto(producto);
+			return new ResponseEntity<>(productoActualizado, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
+	
 	
 	
 	
